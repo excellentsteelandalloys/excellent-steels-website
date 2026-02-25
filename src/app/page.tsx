@@ -14,6 +14,8 @@ import {
   Mail,
   MapPin,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Factory,
   Layers,
   CheckCircle,
@@ -245,6 +247,114 @@ function AboutSection() {
   )
 }
 
+// Product Images Carousel
+function ProductCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+
+  // Placeholder images - replace with actual product images later
+  const productImages = [
+    { id: 1, placeholder: 'Steel Rounds', color: '#2a2a2a' },
+    { id: 2, placeholder: 'Steel Flats', color: '#3a3a3a' },
+    { id: 3, placeholder: 'Steel Billets', color: '#2a2a2a' },
+    { id: 4, placeholder: 'MS Channels', color: '#3a3a3a' },
+    { id: 5, placeholder: 'MS Angles', color: '#2a2a2a' },
+    { id: 6, placeholder: 'MS Pipes', color: '#3a3a3a' },
+    { id: 7, placeholder: 'Steel Ingots', color: '#2a2a2a' },
+    { id: 8, placeholder: 'Custom Alloys', color: '#3a3a3a' },
+  ]
+
+  // Auto-scroll effect
+  useEffect(() => {
+    if (isPaused) return
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % productImages.length)
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [isPaused, productImages.length])
+
+  const scrollToIndex = (index: number) => {
+    setCurrentIndex(index)
+  }
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + productImages.length) % productImages.length)
+  }
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % productImages.length)
+  }
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <h3 className="text-xl font-semibold text-white mb-6 text-center">Product Gallery</h3>
+
+      {/* Carousel Container */}
+      <div className="relative overflow-hidden rounded-lg">
+        {/* Navigation Buttons */}
+        <button
+          onClick={goToPrevious}
+          className="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-[#0a0a0a]/80 hover:bg-[#c17b39] text-white p-2 rounded-full transition-colors"
+          aria-label="Previous"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={goToNext}
+          className="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-[#0a0a0a]/80 hover:bg-[#c17b39] text-white p-2 rounded-full transition-colors"
+          aria-label="Next"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Images Container */}
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {productImages.map((image) => (
+            <div
+              key={image.id}
+              className="w-full flex-shrink-0"
+            >
+              <div
+                className="aspect-[16/9] md:aspect-[21/9] flex items-center justify-center border border-[#2a2a2a] rounded-lg"
+                style={{ backgroundColor: image.color }}
+              >
+                <div className="text-center">
+                  <Factory className="w-16 h-16 text-[#c17b39] mx-auto mb-4" />
+                  <p className="text-white text-lg font-medium">{image.placeholder}</p>
+                  <p className="text-[#a0a0a0] text-sm mt-1">Placeholder Image</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Dots Indicator */}
+      <div className="flex justify-center gap-2 mt-4">
+        {productImages.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => scrollToIndex(index)}
+            className={`w-2 h-2 rounded-full transition-colors ${
+              currentIndex === index ? 'bg-[#c17b39]' : 'bg-[#2a2a2a] hover:bg-[#4a4a4a]'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // Products Section
 function ProductsSection() {
   const products = [
@@ -327,6 +437,11 @@ function ProductsSection() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Product Image Carousel */}
+        <div className="mt-16">
+          <ProductCarousel />
         </div>
       </div>
     </section>
@@ -641,21 +756,25 @@ function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {['Products', 'Specifications', 'Contact'].map((link) => (
-                <li key={link}>
-                  <button
-                    onClick={() => {
-                      const element = document.getElementById(link.toLowerCase())
-                      if (element) {
-                        element.scrollIntoView({ behavior: 'smooth' })
-                      }
-                    }}
-                    className="text-[#a0a0a0] hover:text-[#c17b39] transition-colors text-sm"
-                  >
-                    {link}
-                  </button>
-                </li>
-              ))}
+              {[
+                  { label: 'Products', id: 'products' },
+                  { label: 'Specifications', id: 'specs' },
+                  { label: 'Contact', id: 'inquiry' },
+                ].map((link) => (
+                  <li key={link.id}>
+                    <button
+                      onClick={() => {
+                        const element = document.getElementById(link.id)
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' })
+                        }
+                      }}
+                      className="text-[#a0a0a0] hover:text-[#c17b39] transition-colors text-sm"
+                    >
+                      {link.label}
+                    </button>
+                  </li>
+                ))}
             </ul>
           </div>
 
@@ -665,17 +784,19 @@ function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-[#a0a0a0] text-sm">
                 <Mail className="w-4 h-4 text-[#c17b39]" />
-                info@excellentsteels.com
+                data.excellentsteels@gmail.com
               </li>
-              <li className="flex items-center gap-3 text-[#a0a0a0] text-sm">
-                <Phone className="w-4 h-4 text-[#c17b39]" />
-                +91 98765 43210
+              <li className="flex items-start gap-3 text-[#a0a0a0] text-sm">
+                <Phone className="w-4 h-4 text-[#c17b39] flex-shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span>+91 9501018800</span>
+                  <span>+91 7814300919</span>
+                  <span>+91 9810374289</span>
+                </div>
               </li>
               <li className="flex items-start gap-3 text-[#a0a0a0] text-sm">
                 <MapPin className="w-4 h-4 text-[#c17b39] flex-shrink-0 mt-0.5" />
-                Industrial Area, Sector 25,
-                <br />
-                Faridabad, Haryana 121004
+                Mandigobindgarh, Punjab
               </li>
             </ul>
           </div>
