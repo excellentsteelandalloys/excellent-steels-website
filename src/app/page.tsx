@@ -253,15 +253,15 @@ function ProductCarousel() {
   const [isPaused, setIsPaused] = useState(false)
 
   // Placeholder images - replace with actual product images later
-  const productImages = [
-    { id: 1, placeholder: 'Steel Rounds', color: '#2a2a2a' },
-    { id: 2, placeholder: 'Steel Flats', color: '#3a3a3a' },
-    { id: 3, placeholder: 'Steel Billets', color: '#2a2a2a' },
-    { id: 4, placeholder: 'MS Channels', color: '#3a3a3a' },
-    { id: 5, placeholder: 'MS Angles', color: '#2a2a2a' },
-    { id: 6, placeholder: 'MS Pipes', color: '#3a3a3a' },
-    { id: 7, placeholder: 'Steel Ingots', color: '#2a2a2a' },
-    { id: 8, placeholder: 'Custom Alloys', color: '#3a3a3a' },
+   const productImages = [
+    { id: 1, src: '/products/rounds.png', title: 'Steel Rounds' },
+    { id: 2, src: '/products/flats.jpg', title: 'Steel Flats' },
+    { id: 3, src: '/products/billets.png', title: 'Steel Billets' },
+    { id: 4, src: '/products/channels.webp', title: 'MS Channels' },
+    { id: 5, src: '/products/angles.jpg', title: 'MS Angles' },
+    { id: 6, src: '/products/pipes.jpg', title: 'MS Pipes' },
+    { id: 7, src: '/products/ingots.png', title: 'Steel Ingots' },
+    { id: 8, src: '/products/custom-alloys.jpg', title: 'Custom Alloys' },
   ]
 
   // Auto-scroll effect
@@ -324,9 +324,14 @@ function ProductCarousel() {
               className="w-full flex-shrink-0"
             >
               <div
-                className="aspect-[16/9] md:aspect-[21/9] flex items-center justify-center border border-[#2a2a2a] rounded-lg"
-                style={{ backgroundColor: image.color }}
+                className="aspect-[16/9] md:aspect-[21/9] relative border border-[#2a2a2a] rounded-lg overflow-hidden"
+            
               >
+                <img
+          src={image.src}
+          alt={image.title}
+          className="w-full h-full object-cover"
+        />
                 <div className="text-center">
                   <Factory className="w-16 h-16 text-[#c17b39] mx-auto mb-4" />
                   <p className="text-white text-lg font-medium">{image.placeholder}</p>
