@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model StockItem {
+  id          String   @id @default(cuid())
+  category    String   // "Alloy Steels", "MS Products", etc.
+  productType String   // "Rounds", "Flats", "Billets", etc.
+  grade       String   // "SAE8120", "EN 353", "20MnCr5", etc.
+  size        String   // "50mm", "100x50mm", etc.
+  quantity    String   // "500 kg", "2 tons", etc.
+  condition   String?  // "LRF+VD", "Controlled gases", etc.
+  price       String?  // Price info if available
+  location    String?  // Godown location
+  notes       String?  // Additional notes
+  available   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Inquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  product   String
+  quantity  String?
+  message   String
+  status    String   @default("pending") // pending, contacted, closed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
